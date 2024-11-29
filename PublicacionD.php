@@ -57,7 +57,72 @@ if ($id_prod) {
 
     // Verifica si la URL de origen está disponible
   
+
+
+
     
+
+
+$limite_vistas_por_sesion = 1; 
+$tiempo_ventana = 60; 
+
+
+if ($id_prod) {
+
+    $vistas = 0;
+
+
+    $cons = "SELECT vistas FROM publicacion_prod WHERE id_prod='$id_prod'";
+    $resp = $con->query($cons);
+
+   
+    if ($fila = $resp->fetch_assoc()) {
+        $vistas = $fila['vistas']; 
+    }
+
+ 
+    $cookie_name = "vistas_publicacion_" . $id_prod;
+    $hora_actual = time();
+
+   
+    if (isset($_COOKIE[$cookie_name])) {
+        $ultima_vista = $_COOKIE[$cookie_name];
+
+        
+        if ($hora_actual - $ultima_vista < $tiempo_ventana) {
+           
+            echo "<p>Límite de vistas alcanzado para esta publicación. Vistas actuales: " . $vistas . "</p>";
+        } else {
+          
+            $vistas++;
+
+           
+            $act = "UPDATE publicacion_prod SET vistas='$vistas' WHERE id_prod='$id_prod'";
+            if (mysqli_query($con, $act)) {
+           
+                setcookie($cookie_name, $hora_actual, $hora_actual + $tiempo_ventana, "/");
+
+                
+                echo "<p>Vistas actuales: " . $vistas . "</p>";
+            }
+        }
+    } else {
+     
+        $vistas++; 
+
+
+        $act = "UPDATE publicacion_prod SET vistas='$vistas' WHERE id_prod='$id_prod'";
+        if (mysqli_query($con, $act)) {
+       
+            setcookie($cookie_name, $hora_actual, $hora_actual + $tiempo_ventana, "/");
+
+    
+            echo "<p>Vistas actuales: " . $vistas . "</p>";
+        }
+    }
+}
+
+
 }
 ?>
 
@@ -89,6 +154,9 @@ if ($id_prod) {
         <div class="divtitulodescripcion2"><h2 class="titulopubliD2">Descripción</h2></div>
         <div class="divdescripcionpubliD">
             <p class="letraspubliDdesc"><?php echo $desc_emp; ?></p>
+            <div id="contador">
+                <p><?php echo "Vistas: ".$vistas?></p>
+        </div>
         </div>
         <div class="divmapapubliD" id="map"></div>
     </div>
@@ -200,6 +268,11 @@ $(document).ready(function() {
     });
 });
 </script>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="lib/jquery.js"></script>
+<script src="jquery-2.1.3.js"></script>
 
 </body>
 </html>
