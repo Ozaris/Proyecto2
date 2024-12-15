@@ -219,26 +219,17 @@ function elim($con, $nombre_p, $rol) {
         $id_per = $id_per_row['Id_per'];
 
         // Primero elimina los comentarios
-        $consulta_eliminar_com = "DELETE FROM comentario WHERE id_prod IN (SELECT Id_prod FROM publicacion_prod WHERE id_per='$id_per')";
-        mysqli_query($con, $consulta_eliminar_com);
+    // Primero elimina los comentarios
+    $consulta_eliminar_com = "DELETE FROM persona WHERE Id_per = '$id_per';";
 
-        // Luego elimina de la tabla publicacion_prod
-        $consulta_eliminar_publ = "DELETE FROM publicacion_prod WHERE id_per = '$id_per'";
-        mysqli_query($con, $consulta_eliminar_publ);
-
-        // Luego elimina de la tabla empresa
-        $consulta_eliminar_empresa = "DELETE FROM empresa WHERE nombre_p='$nombre_p'";
-        mysqli_query($con, $consulta_eliminar_empresa);
+            mysqli_query($con, $consulta_eliminar_com);
     }
 
     // Si el rol es 'usuario', es el mismo procedimiento pero sin borrar la tabla publicación
     if ($rol === 'usuario') {
-        $consulta_eliminar_com = "DELETE FROM comentario WHERE id_per2 = (SELECT Id_per FROM usuario WHERE nombre_p='$nombre_p')";
-        mysqli_query($con, $consulta_eliminar_com);
+        $consulta_eliminar_com = "DELETE FROM persona WHERE Id_per = '$id_per';";
 
-        // Luego eliminar de la tabla usuario
-        $consulta_eliminar_usuario = "DELETE FROM usuario WHERE nombre_p='$nombre_p'";
-        mysqli_query($con, $consulta_eliminar_usuario);
+        mysqli_query($con, $consulta_eliminar_com);
     }
 
     // Finalmente, eliminar de la tabla persona

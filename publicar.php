@@ -107,7 +107,7 @@ $foto = $_COOKIE['foto'] ?? 'default.png';
                                 <button type="button" class="botoneliminarimagen" id="botonEliminarImagen" style="display: none;">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                <input class="form-control form-control1" type="file" id="formFile" name="imagen_prod" accept="image/jpeg,jpg,png">
+                                <input class="form-control form-control1" type="file" id="formFile" name="imagen_prod" accept="image/jpeg,jpg,png" multiple>
                                 <div id="imagePreview" class="image-preview"></div> <!-- Vista previa -->
                             </div>
 
